@@ -6,10 +6,11 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         AirportDto::class,
+        MetarDto::class,
     ],
-    version = 1,
-
+    version = 2
 )
 abstract class FlyawareDatabase : RoomDatabase() {
     abstract fun airportDao(): AirportDao
+    abstract fun metarDao(): MetarDao
 }

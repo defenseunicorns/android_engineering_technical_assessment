@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.defenseunicorns.flyaware.database.AirportDao
 import com.defenseunicorns.flyaware.database.FlyawareDatabase
+import com.defenseunicorns.flyaware.database.MetarDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,4 +30,8 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideAirportDao(database: FlyawareDatabase): AirportDao = database.airportDao()
+
+    @Provides
+    @Singleton
+    fun provideMetarDao(database: FlyawareDatabase): MetarDao = database.metarDao()
 }

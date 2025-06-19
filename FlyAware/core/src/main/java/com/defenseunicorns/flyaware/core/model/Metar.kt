@@ -18,7 +18,7 @@ data class Metar(
     val windDirection: Int?, // Degrees
     val windSpeed: Int?, // Knots
     val windGust: Int?, // Knots
-    val visibility: Double?, // Statute Miles
+    val visibility: String?, // Statute Miles - Changed to match response type.
     val altimeter: Double?, // InHg
     val flightCategory: FlightCategory,
     val cloudLayers: List<CloudLayer> = emptyList(),
