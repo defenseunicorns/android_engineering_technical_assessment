@@ -6,10 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.defenseunicorns.flyaware.presentation.addAirportScreen.AddAirportDialog
 import com.defenseunicorns.flyaware.presentation.airportList.AirportsScreen
 import com.defenseunicorns.flyaware.ui.theme.FlyAwareTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,9 +29,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            var showAddDialog by remember { mutableStateOf(false) }
+
             FlyAwareTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
+                    FloatingActionButton(onClick = { showAddDialog = true }) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add Airport")
+                    }
+                }) { innerPadding ->
                     AirportsScreen(modifier = Modifier.padding(innerPadding))
+                    if (showAddDialog) {
+                        AddAirportDialog(onDismiss = { showAddDialog = false })
+                    }
                 }
             }
         }

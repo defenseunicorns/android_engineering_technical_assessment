@@ -12,7 +12,7 @@ import com.defenseunicorns.flyaware.model.Metar
 @Composable
 fun AirportsScreen(
     viewModel: AirportsViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val metars by viewModel.metars.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -39,7 +39,7 @@ fun AirportsScreen(
 
                     metars.forEach { metar ->
                         MetarItem(metar = metar)
-                        Divider(modifier = Modifier.padding(vertical = 8.dp))
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     }
                 }
             }
