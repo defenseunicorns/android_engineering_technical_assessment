@@ -19,6 +19,7 @@ fun AirportListScreenPreview() {
 @Composable
 fun AirportListScreen(
     modifier: Modifier = Modifier,
+    state: AirportListState,
     onAirportSelected: (String) -> Unit
 ) {
     Text(
