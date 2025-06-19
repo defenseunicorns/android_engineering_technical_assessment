@@ -23,3 +23,4 @@ rootProject.name = "FlyAware"
 include(":app")
 include(":database")
 include(":network")
+include(":core")

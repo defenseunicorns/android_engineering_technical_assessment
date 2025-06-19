@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+
     // Dependency Injection - Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
