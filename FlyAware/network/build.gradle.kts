@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
+    api(project(":core"))
 
     // Dependency Injection - Hilt
     implementation(libs.hilt.android)
@@ -45,6 +45,7 @@ dependencies {
 
     // Networking - Ktor
     implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
