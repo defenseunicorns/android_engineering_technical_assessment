@@ -15,4 +15,6 @@ interface FlyAwareRepository {
     suspend fun addAirport(icaoCode: String)
 
     suspend fun getSavedAirports(): Flow<List<AirportEntity>>
+
+    suspend fun removeAirport(icaoCode: String)
 }

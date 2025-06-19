@@ -59,4 +59,10 @@ class AirportsViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteAirport(icaoCode: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.removeAirport.invoke(icaoCode)
+        }
+    }
 }

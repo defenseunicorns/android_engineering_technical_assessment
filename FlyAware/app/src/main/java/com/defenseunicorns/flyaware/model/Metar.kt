@@ -4,7 +4,7 @@
  */
 package com.defenseunicorns.flyaware.model
 
-import java.time.*
+import java.time.ZonedDateTime
 
 /**
  * Domain model for a METAR (Meteorological Aerodrome Report)

@@ -4,6 +4,7 @@ import com.defenseunicorns.flyaware.domain.usecase.AddAirportUseCase
 import com.defenseunicorns.flyaware.domain.usecase.FlyAwareUseCases
 import com.defenseunicorns.flyaware.domain.usecase.GetAirportsUseCase
 import com.defenseunicorns.flyaware.domain.usecase.GetMetarsUseCase
+import com.defenseunicorns.flyaware.domain.usecase.RemoveAirportUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,10 +18,12 @@ object UseCaseModule {
     fun provideFlyAwareUseCases(
         getMetars: GetMetarsUseCase,
         getAirports: GetAirportsUseCase,
-        addAirport: AddAirportUseCase
+        addAirport: AddAirportUseCase,
+        removeAirport: RemoveAirportUseCase
     ): FlyAwareUseCases = FlyAwareUseCases(
         getMetars = getMetars,
         getAirports = getAirports,
-        addAirport = addAirport
+        addAirport = addAirport,
+        removeAirport = removeAirport
     )
 }

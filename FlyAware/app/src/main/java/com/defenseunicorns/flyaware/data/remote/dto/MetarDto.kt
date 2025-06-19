@@ -1,5 +1,7 @@
 package com.defenseunicorns.flyaware.data.remote.dto
 
+import com.defenseunicorns.flyaware.model.CloudCoverage
+import com.defenseunicorns.flyaware.model.CloudLayer
 import com.defenseunicorns.flyaware.model.FlightCategory
 import com.defenseunicorns.flyaware.model.Metar
 import kotlinx.serialization.SerialName
@@ -54,21 +56,39 @@ data class MetarDto(
             windDirection = windDir,
             windSpeed = windSpeed,
             windGust = windGust,
-            visibility = 0.0,// todo visibility conversion,
+            visibility = getVisiblity(visibility),
             altimeter = altimeter,
-            flightCategory = FlightCategory.UNKNOWN, // todo
-            cloudLayers = emptyList(), // todo
-            weatherConditions = emptyList()  // todo
+            flightCategory = FlightCategory.UNKNOWN,// todo doesn't seem to be part of a metar
+            cloudLayers = clouds?.map {
+                CloudLayer(baseAltitudeFeet = it.base, coverage = it.fromEnum())
+            } ?: emptyList(),
+            weatherConditions = emptyList()  // todo doesn't seem to be part of a metar
         )
 
     }
+}
+
+fun getVisiblity(visibility: String?): Double {
+    return if (visibility?.endsWith('+') == true) {
+        visibility.removeSuffix("+").toDoubleOrNull() ?: 0.0
+    } else visibility?.toDoubleOrNull() ?: 0.0
 }
 
 @Serializable
 data class CloudLayerDto(
     @SerialName("cover") val cover: String? = null,
     @SerialName("base") val base: Int? = null
-)
+) {
+    fun fromEnum(): CloudCoverage {
+        CloudCoverage.entries.forEach {
+            if (it.name.equals(cover, true)) {
+                // todo map the name to a human readable value instead of the code
+                return it
+            }
+        }
+        return CloudCoverage.UNKNOWN
+    }
+}
 
 fun String.toZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.parse(this)

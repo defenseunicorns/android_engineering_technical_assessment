@@ -24,10 +24,15 @@ class FlyAwareRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addAirport(icaoCode: String) {
+        // TODO retrieve all airport information from the API and save it to the database
         airportDao.insertAirport(AirportEntity(icaoCode = icaoCode))
     }
 
     override suspend fun getSavedAirports(): Flow<List<AirportEntity>> {
         return airportDao.getAllAirports()
+    }
+
+    override suspend fun removeAirport(icaoCode: String) {
+        airportDao.removeAirport(icaoCode)
     }
 }
