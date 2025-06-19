@@ -52,6 +52,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":database"))
+
     // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -78,11 +80,6 @@ dependencies {
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
-
-    // Local Storage - Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
 
     // Preferences - DataStore
     implementation(libs.datastore.preferences)

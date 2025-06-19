@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FlyAware"
 include(":app")
- 
+include(":database")
