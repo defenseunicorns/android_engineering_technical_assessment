@@ -2,7 +2,7 @@
  * Copyright 2024 Defense Unicorns
  * SPDX-License-Identifier: LicenseRef-Defense-Unicorns-Commercial
  */
-package com.defenseunicorns.flyaware.model
+package com.defenseunicorns.flyaware.core.model
 
 /**
  * Flight rules categories based on weather conditions

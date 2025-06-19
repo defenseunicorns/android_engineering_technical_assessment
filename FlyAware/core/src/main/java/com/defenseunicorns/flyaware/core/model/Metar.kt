@@ -2,9 +2,9 @@
  * Copyright 2024 Defense Unicorns
  * SPDX-License-Identifier: LicenseRef-Defense-Unicorns-Commercial
  */
-package com.defenseunicorns.flyaware.model
+package com.defenseunicorns.flyaware.core.model
 
-import java.time.*
+import java.time.ZonedDateTime
 
 /**
  * Domain model for a METAR (Meteorological Aerodrome Report)
