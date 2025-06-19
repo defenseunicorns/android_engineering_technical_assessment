@@ -3,4 +3,7 @@
     <string name="airports_empty">Tap the plus button to get started.</string>
     <string name="airport_code">Airport Code</string>
     <string name="airport_code_title">Add Airport</string>
+
+    <string name="card_visibility">Visibility: %1$s miles</string>
+    <string name="card_temp">Temperature: %.1f˚C</string>
 </resources>

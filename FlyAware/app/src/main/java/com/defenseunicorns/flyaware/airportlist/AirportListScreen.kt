@@ -1,7 +1,6 @@
 package com.defenseunicorns.flyaware.airportlist
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
@@ -44,18 +43,30 @@ fun AirportListScreen(
     val inputText = remember { mutableStateOf("") }
 
     Box {
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            onClick = { showDialog.value = true },
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(
-                painter = painterResource(android.R.drawable.ic_input_add),
-                contentDescription = stringResource(R.string.airport_code_title),
-                tint = MaterialTheme.colorScheme.onPrimary
+        if (state.isEmpty() && !showDialog.value) {
+            ContentEmpty(modifier)
+        } else {
+            AirportListContent(
+                modifier = modifier,
+                content = state,
+                onClick = onAirportSelected
             )
+        }
+
+        if (!showDialog.value) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                onClick = { showDialog.value = true },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    painter = painterResource(android.R.drawable.ic_input_add),
+                    contentDescription = stringResource(R.string.airport_code_title),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
 
         if (showDialog.value) {
@@ -88,16 +99,6 @@ fun AirportListScreen(
                     }
                 },
                 properties = DialogProperties(dismissOnClickOutside = true)
-            )
-        }
-
-        if (state.isEmpty() && !showDialog.value) {
-            ContentEmpty(modifier)
-        } else {
-            Text(
-                text = "AirportList",
-                modifier = modifier
-                    .fillMaxSize()
             )
         }
     }
