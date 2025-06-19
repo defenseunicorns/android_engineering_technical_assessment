@@ -7,12 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.defenseunicorns.flyaware.airportdetails.AirportDetailsScreen
+import com.defenseunicorns.flyaware.airportdetails.AirportDetailsViewModel
 import com.defenseunicorns.flyaware.airportlist.AirportListScreen
 import com.defenseunicorns.flyaware.airportlist.AirportListViewModel
 
@@ -25,9 +24,9 @@ fun ConfigureRoutes(
 
     NavHost(
         navController = navController,
-        startDestination = "airportList"
+        startDestination = AirportListRoute
     ) {
-        composable("airportList") {
+        composable<AirportListRoute> {
             val viewModel = hiltViewModel<AirportListViewModel>()
 
             val state by remember(viewModel) { viewModel.state }
@@ -38,20 +37,20 @@ fun ConfigureRoutes(
                 state,
                 onUiAction = { viewModel.onUiAction(it) },
                 onAirportSelected = { airportId ->
-                    navController.navigate("airportDetails/$airportId")
+                    navController.navigate(AirportDetailsRoute(airportId))
                 }
             )
         }
-        composable(
-            route = "airportDetails/{airportId}",
-            arguments = listOf(
-                navArgument("airportId") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val airportId = backStackEntry.arguments?.getString("airportId") ?: ""
+
+        composable<AirportDetailsRoute> {
+            val viewModel = hiltViewModel<AirportDetailsViewModel>()
+
+            val state by remember(viewModel) { viewModel.state }
+                .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
+
             AirportDetailsScreen(
                 modifier = modifier,
-                airportId = airportId
+                airportMetar = state
             )
         }
     }

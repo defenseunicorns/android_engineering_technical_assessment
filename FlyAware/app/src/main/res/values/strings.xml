@@ -6,4 +6,5 @@
 
     <string name="card_visibility">Visibility: %1$s miles</string>
     <string name="card_temp">Temperature: %.1f˚C</string>
+    <string name="card_dew">Dew point: %.1f˚C</string>
 </resources>
