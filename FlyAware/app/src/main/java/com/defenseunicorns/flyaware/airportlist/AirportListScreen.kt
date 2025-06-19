@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.defenseunicorns.flyaware.R
+import com.defenseunicorns.flyaware.core.model.AirportMetar
 import com.defenseunicorns.flyaware.ui.theme.FlyAwareTheme
 
 
@@ -35,7 +36,7 @@ fun AirportListScreenPreview() {
 @Composable
 fun AirportListScreen(
     modifier: Modifier = Modifier,
-    state: AirportListState,
+    state: List<AirportMetar>,
     onUiAction: (UiAction) -> Unit,
     onAirportSelected: (String) -> Unit
 ) {
@@ -90,7 +91,7 @@ fun AirportListScreen(
             )
         }
 
-        if (state.airports.isEmpty() && !showDialog.value) {
+        if (state.isEmpty() && !showDialog.value) {
             ContentEmpty(modifier)
         } else {
             Text(
