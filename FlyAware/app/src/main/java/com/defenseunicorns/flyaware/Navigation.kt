@@ -36,6 +36,7 @@ fun ConfigureRoutes(
             AirportListScreen(
                 modifier = modifier,
                 state,
+                onUiAction = { viewModel.onUiAction(it) },
                 onAirportSelected = { airportId ->
                     navController.navigate("airportDetails/$airportId")
                 }
