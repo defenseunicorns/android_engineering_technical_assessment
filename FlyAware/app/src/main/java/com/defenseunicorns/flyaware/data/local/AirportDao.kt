@@ -13,4 +13,16 @@ interface AirportDao {
 
     @Query("SELECT * FROM airports")
     fun getAllAirports(): Flow<List<AirportEntity>>
+    
+    @Query("SELECT * FROM airports WHERE icaoCode = :icaoCode")
+    suspend fun getAirportByIcaoCode(icaoCode: String): AirportEntity?
+    
+    @Query("SELECT EXISTS(SELECT 1 FROM airports WHERE icaoCode = :icaoCode)")
+    suspend fun airportExists(icaoCode: String): Boolean
+    
+    @Update
+    suspend fun updateAirport(airport: AirportEntity)
+    
+    @Query("DELETE FROM airports")
+    suspend fun clearAllAirports()
 }

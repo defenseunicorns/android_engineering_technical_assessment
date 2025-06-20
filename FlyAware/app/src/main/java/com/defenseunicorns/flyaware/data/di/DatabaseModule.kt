@@ -3,7 +3,6 @@ package com.defenseunicorns.flyaware.data.di
 import android.app.Application
 import androidx.room.Room
 import com.defenseunicorns.flyaware.data.local.FlyAwareDatabase
-import com.defenseunicorns.flyaware.data.local.AirportDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +22,4 @@ object DatabaseModule {
             "flyaware_db"
         ).build()
     }
-
-    @Provides
-    fun provideAirportDao(db: FlyAwareDatabase): AirportDao = db.airportDao()
 }

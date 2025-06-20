@@ -38,8 +38,12 @@ class AirportsViewModel @Inject constructor(
             useCases.getAirports.invoke()
                 .collect { airports ->
                     _savedAirports.value = airports
-                    // todo only fetch one metar if the user just added a new airport?
-                    fetchMetars()
+                    // Only fetch METARs if we have airports
+                    if (airports.isNotEmpty()) {
+                        fetchMetars()
+                    } else {
+                        _metars.value = emptyList()
+                    }
                 }
         }
     }
