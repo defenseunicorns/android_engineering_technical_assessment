@@ -35,9 +35,14 @@ Please build on the provided skeleton application found in `FlyAware/` and build
 When you are done please return a .tar.gz or .zip compressed copy of your work (including the .git/ directory) to the hiring manager by way of email.  We will assess the contents of your copy of the template but will have the compressed artifact as a backup plan.
 
 Be sure to update the README with 
-- Setup/Build instructions
+- Setup/Build instructions 
+No special instructions, just build it and it will run.
+
 - Brief notes on implementation
+When I went to implement my details screen I realized that I wasn't saving the metars in the database so I would have had to either make another network call or refactor the original call to save to the database (which is what I should have done in the first place).  I didn't have time to implement either of those solutions.  I would be very surprised if many devs could implement this many features from scratch in only 4 hours.  Sorry that it looks so ugly, I like UI work but given the four hour constraint chose to complete as many features as possible instead of spending extra time to make it look good. 
+
 - Any assumptions made in the course of completing the exercise
+I assumed that we shouldn't add any additional libraries.  This was interesting since it was my first time working with Dagger Hilt and Ktor.  I've always used Retrofit, Moshi, and manual dependency injection.
 
 #### Core Features
 - Allow users to add and remove airports by ICAO code
