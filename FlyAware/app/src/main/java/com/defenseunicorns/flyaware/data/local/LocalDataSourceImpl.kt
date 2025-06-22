@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LocalDataSourceImpl @Inject constructor(
-    private val database: FlyAwareDatabase
+    database: FlyAwareDatabase
 ) : LocalDataSource {
 
     private val airportDao: AirportDao = database.airportDao()

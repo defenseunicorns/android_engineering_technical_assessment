@@ -1,6 +1,5 @@
 package com.defenseunicorns.flyaware.data.local
 
-import com.defenseunicorns.flyaware.data.local.AirportEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
