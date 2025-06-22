@@ -10,7 +10,6 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
-import io.ktor.http.HttpStatusCode
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,11 +61,26 @@ class RemoteDataSourceImpl @Inject constructor(
             
             val url = "$BASE_URL/taf?ids=${icaoCodes.joinToString(",")}&format=json"
             Log.d(TAG, "Fetching TAFs for airports: $icaoCodes")
+            Log.d(TAG, "TAF URL: $url")
             
             val response = client.get(url)
+            Log.d(TAG, "TAF response status: ${response.status}")
+            
             val tafs: List<TafDto> = response.body()
             
             Log.d(TAG, "Successfully fetched ${tafs.size} TAFs")
+            
+            // Debug: Log the first TAF to see its structure
+            if (tafs.isNotEmpty()) {
+                val firstTaf = tafs.first()
+                Log.d(TAG, "First TAF structure: icaoId=${firstTaf.icaoId}, rawTAF=${firstTaf.rawTAF?.take(50)}")
+                Log.d(TAG, "First TAF issueTime=${firstTaf.issueTime}, validTimeFrom=${firstTaf.validTimeFrom}, validTimeTo=${firstTaf.validTimeTo}")
+                Log.d(TAG, "First TAF fcsts count: ${firstTaf.fcsts?.size}")
+            } else {
+                Log.w(TAG, "No TAFs returned from API - this might be normal if no TAFs are available")
+            }
+            
+            // Temporarily return all TAFs without filtering to see what we get
             Result.success(tafs)
             
         } catch (e: ClientRequestException) {

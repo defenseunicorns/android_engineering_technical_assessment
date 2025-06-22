@@ -22,7 +22,9 @@ data class Metar(
     val altimeter: Double?, // InHg
     val flightCategory: FlightCategory,
     val cloudLayers: List<CloudLayer> = emptyList(),
-    val weatherConditions: List<WeatherCondition> = emptyList()
+    val weatherConditions: List<WeatherCondition> = emptyList(),
+    val latitude: Double? = null,
+    val longitude: Double? = null
 ) {
     companion object {
         val EMPTY = Metar(
@@ -65,6 +67,7 @@ data class WeatherCondition(
 enum class CloudCoverage {
     SKC, // Sky Clear
     CLR, // Clear below 12,000 ft
+    CAVOK, // Ceiling and Visibility OK
     FEW, // Few (1/8 to 2/8)
     SCT, // Scattered (3/8 to 4/8)
     BKN, // Broken (5/8 to 7/8)

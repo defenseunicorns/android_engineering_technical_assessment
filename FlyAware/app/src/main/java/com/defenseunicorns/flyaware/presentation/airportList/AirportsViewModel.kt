@@ -69,4 +69,8 @@ class AirportsViewModel @Inject constructor(
             useCases.removeAirport.invoke(icaoCode)
         }
     }
+
+    fun refreshData() {
+        fetchMetars()
+    }
 }

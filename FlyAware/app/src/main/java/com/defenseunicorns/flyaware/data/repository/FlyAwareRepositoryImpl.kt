@@ -5,6 +5,7 @@ import com.defenseunicorns.flyaware.data.local.AirportEntity
 import com.defenseunicorns.flyaware.data.local.LocalDataSource
 import com.defenseunicorns.flyaware.data.remote.RemoteDataSource
 import com.defenseunicorns.flyaware.domain.repository.FlyAwareRepository
+import com.defenseunicorns.flyaware.model.Airport
 import com.defenseunicorns.flyaware.model.Metar
 import com.defenseunicorns.flyaware.model.Taf
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +51,24 @@ class FlyAwareRepositoryImpl @Inject constructor(
             result.fold(
                 onSuccess = { tafDtos ->
                     Log.d(TAG, "Successfully fetched ${tafDtos.size} TAFs")
-                    tafDtos.map { it.toTaf() }
+                    
+                    if (tafDtos.isEmpty()) {
+                        Log.d(TAG, "No TAFs available for airports: $icaoCodes - this is normal for some airports")
+                        return emptyList()
+                    }
+                    
+                    tafDtos.mapNotNull { dto ->
+                        try {
+                            Log.d(TAG, "Converting TAF DTO: icaoId=${dto.icaoId}, rawTAF=${dto.rawTAF?.take(50)}")
+                            Log.d(TAG, "TAF fcsts count: ${dto.fcsts?.size}")
+                            val taf = dto.toTaf()
+                            Log.d(TAG, "Successfully converted TAF: ${taf.icaoCode}, rawText=${taf.rawText.take(50)}..., forecastPeriods=${taf.forecastPeriods.size}")
+                            taf
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to convert TAF DTO: ${e.message}")
+                            null
+                        }
+                    }
                 },
                 onFailure = { exception ->
                     Log.e(TAG, "Failed to fetch TAFs: ${exception.message}")
@@ -66,7 +84,7 @@ class FlyAwareRepositoryImpl @Inject constructor(
     override suspend fun addAirport(icaoCode: String) {
         try {
             Log.d(TAG, "Adding airport: $icaoCode")
-            
+
             // First validate the airport code
             val validationResult = remoteDataSource.validateAirportCode(icaoCode)
             validationResult.fold(
@@ -77,8 +95,13 @@ class FlyAwareRepositoryImpl @Inject constructor(
                         airportInfoResult.fold(
                             onSuccess = { airportInfo ->
                                 val airportEntity = AirportEntity(
-                                    icaoCode = airportInfo.icaoCode,
-                                    name = airportInfo.name
+                                    icaoCode = airportInfo.icaoCode.orEmpty(),
+                                    name = airportInfo.name,
+                                    state = airportInfo.state,
+                                    country = airportInfo.country,
+                                    elevation = airportInfo.elevation,
+                                    latitude = airportInfo.latitude,
+                                    longitude = airportInfo.longitude
                                 )
                                 localDataSource.insertAirport(airportEntity)
                                 Log.d(TAG, "Successfully added airport: $icaoCode")
@@ -99,8 +122,7 @@ class FlyAwareRepositoryImpl @Inject constructor(
                 }
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error in addAirport: ${e.message}")
-            throw e
+            Log.e("FlyAwareRepository", "Error in addAirport: ${e.message}")
         }
     }
 
@@ -118,5 +140,10 @@ class FlyAwareRepositoryImpl @Inject constructor(
             Log.e(TAG, "Error in removeAirport: ${e.message}")
             throw e
         }
+    }
+
+    override suspend fun getAirportByIcao(icaoCode: String): AirportEntity? {
+        Log.d(TAG, "Getting airport by ICAO code: $icaoCode")
+        return localDataSource.getAirportByIcaoCode(icaoCode)
     }
 }

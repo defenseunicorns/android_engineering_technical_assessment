@@ -2,6 +2,7 @@ package com.defenseunicorns.flyaware.data.di
 
 import com.defenseunicorns.flyaware.domain.usecase.AddAirportUseCase
 import com.defenseunicorns.flyaware.domain.usecase.FlyAwareUseCases
+import com.defenseunicorns.flyaware.domain.usecase.GetAirportByIcaoUseCase
 import com.defenseunicorns.flyaware.domain.usecase.GetAirportsUseCase
 import com.defenseunicorns.flyaware.domain.usecase.GetMetarsUseCase
 import com.defenseunicorns.flyaware.domain.usecase.GetTafsUseCase
@@ -20,12 +21,14 @@ object UseCaseModule {
         getMetars: GetMetarsUseCase,
         getTafs: GetTafsUseCase,
         getAirports: GetAirportsUseCase,
+        getAirportByIcao: GetAirportByIcaoUseCase,
         addAirport: AddAirportUseCase,
         removeAirport: RemoveAirportUseCase
     ): FlyAwareUseCases = FlyAwareUseCases(
         getMetars = getMetars,
         getTafs = getTafs,
         getAirports = getAirports,
+        getAirportByIcao = getAirportByIcao,
         addAirport = addAirport,
         removeAirport = removeAirport
     )

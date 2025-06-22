@@ -8,15 +8,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class AirportInfoDto(
-    @SerialName("icao")
-    val icaoCode: String,
+    @SerialName("icaoId")
+    val icaoCode: String?,
     
     @SerialName("name")
     val name: String,
-    
-    @SerialName("city")
-    val city: String? = null,
-    
+
     @SerialName("state")
     val state: String? = null,
     

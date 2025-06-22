@@ -1,26 +1,34 @@
 package com.defenseunicorns.flyaware.presentation.airportList
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.defenseunicorns.flyaware.AirportDetails
-import com.defenseunicorns.flyaware.model.CloudCoverage
-import com.defenseunicorns.flyaware.model.CloudLayer
-import com.defenseunicorns.flyaware.model.FlightCategory
-import com.defenseunicorns.flyaware.model.Metar
-import com.defenseunicorns.flyaware.model.WeatherCondition
-import com.defenseunicorns.flyaware.model.WeatherIntensity
-import java.time.ZonedDateTime
+import com.defenseunicorns.flyaware.R
+import com.defenseunicorns.flyaware.presentation.components.WeatherInfoCard
 
 @Composable
 fun AirportsScreen(
@@ -31,117 +39,106 @@ fun AirportsScreen(
     val metars by viewModel.metars.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
-    val deleteCallback : (String) -> Unit = {viewModel.deleteAirport(it) }
 
-    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Top) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
         when {
             isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Loading weather data...",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
             error != null -> {
-                Text(
-                    text = error ?: "Unknown error",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_error),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Error loading data",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = error ?: "Unknown error",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = { viewModel.refreshData() }
+                    ) {
+                        Text("Retry")
+                    }
+                }
+            }
+
+            metars.isEmpty() -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_flight),
+                        contentDescription = "Flight icon",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "No airports saved",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Add airports to see current weather conditions",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
             else -> {
-
-                if (metars.isEmpty()) {
-                    Text(
-                        text = "No data available",
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-
-                LazyColumn(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.Top) {
-                    stickyHeader {
-                        Text(
-                            text = "Airport Metars",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.secondary
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(metars) { metar ->
+                        WeatherInfoCard(
+                            metar = metar,
+                            onDeleteClick = { viewModel.deleteAirport(metar.icaoCode) },
+                            onClick = { navController.navigate(AirportDetails(metar.icaoCode)) }
                         )
                     }
-                    item {
-                        metars.forEach { metar ->
-                            MetarItem(
-                                metar = metar,
-                                deleteCallback
-                            ) { navController.navigate(AirportDetails(metar.icaoCode)) }
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                        }
-                    }
                 }
             }
         }
     }
-}
-
-@Composable
-fun MetarItem(
-    metar: Metar,
-    deleteCallback : (String) -> Unit,
-    onClick : () -> Unit
-) {
-    Column(modifier = Modifier.clickable { onClick() }) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Column {
-                Text("Station: ${metar.icaoCode}")
-                Text("Flight Category: ${metar.flightCategory}")
-                Text("Temperature: ${metar.temperature}°C")
-                Text("Wind: ${metar.windSpeed ?: "--"} kt")
-                Text("Visibility: ${metar.visibility ?: "--"} mi")
-            }
-            Column {
-                Text("Dewpoint: ${metar.dewpoint}°C")
-                Text("Altimeter: ${metar.altimeter ?: "--"} hPa")
-                if (metar.cloudLayers.isNotEmpty()) {
-                    Text("Cloud Layers:")
-                    metar.cloudLayers.forEach { cloudLayer ->
-                        Text("- ${cloudLayer.coverage.name} at ${cloudLayer.baseAltitudeFeet} ft")
-                    }
-                }
-            }
-        }
-        IconButton(
-            onClick = {
-                deleteCallback.invoke(metar.icaoCode)
-            },
-        ) {
-            Icon(Icons.Default.Delete, contentDescription = "Delete")
-        }
-    }
-}
-
-@Preview
-@Composable
-fun MetrItemPreview() {
-    MetarItem(
-        Metar(
-            icaoCode = "Test",
-            rawText = "test text",
-            observationTime = ZonedDateTime.now(),
-            temperature = 22.0,
-            dewpoint = 46.2,
-            windDirection = 45,
-            windSpeed = 22,
-            windGust = 32,
-            visibility = 1.5,
-            altimeter = 33.3,
-            flightCategory = FlightCategory.IFR,
-            cloudLayers = listOf(CloudLayer(
-                CloudCoverage.VV,
-                baseAltitudeFeet = 300,
-                cloudType = "tasty"
-            )),
-            weatherConditions = listOf(WeatherCondition(WeatherIntensity.MODERATE))
-        ),
-        {},
-        {}
-    )
 }
